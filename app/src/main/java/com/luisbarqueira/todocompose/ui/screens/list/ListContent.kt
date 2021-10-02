@@ -18,13 +18,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.luisbarqueira.todocompose.data.models.Priority
 import com.luisbarqueira.todocompose.data.models.TodoTask
 import com.luisbarqueira.todocompose.ui.theme.*
+import com.luisbarqueira.todocompose.util.RequestState
 
 @ExperimentalMaterialApi
 @Composable
 fun ListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
-    tasks: List<TodoTask>
+    tasks: RequestState<List<TodoTask>>
 ) {
+    if (tasks is RequestState.Success) {
+        if (tasks.data.isEmpty()) EmptyContent() else
+            DisplayTasks(
+                tasks = tasks.data,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun DisplayTasks(tasks: List<TodoTask>, navigateToTaskScreen: (taskId: Int) -> Unit) {
     LazyColumn {
         items(
             items = tasks,

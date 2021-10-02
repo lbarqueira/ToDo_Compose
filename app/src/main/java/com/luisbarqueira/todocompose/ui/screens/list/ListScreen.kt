@@ -1,11 +1,9 @@
 package com.luisbarqueira.todocompose.ui.screens.list
 
-import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
@@ -27,20 +25,20 @@ fun ListScreen(
     // Instead, see rememberCoroutineScope to obtain a CoroutineScope that may be used to launch
     // ongoing jobs scoped to the composition in response to event callbacks.
 
-    LaunchedEffect(true) {
+/*    LaunchedEffect(true) {
         Log.d("ListScreen", "LaunchedEffect triggered")
         sharedViewModel.getAllTasks()
-    }
+    }*/
+    //! getAllTasks() in the init block of sharedViewModel
+
+
 
     //! collectAsState() collects values from the StateFlow and represents the latest value
     //! via Compose's State API. This will make the Compose code that reads that state value recompose on new emissions.
     //! Compose also offers APIs for Android's most popular stream-based solutions, like:
     //! LiveData.observeAsState()
 
-    val allTasks by sharedViewModel.allTasks.collectAsState()
-    for (task in allTasks) {
-        Log.d("ListScreen", task.title)
-    }
+    val allTasks by sharedViewModel.allTasks.collectAsState() // the type is  RequestState<List<TodoTask>>
 
 
     //! 1 - We are declaring a variable searchAppBarState of type SearchAppBarState

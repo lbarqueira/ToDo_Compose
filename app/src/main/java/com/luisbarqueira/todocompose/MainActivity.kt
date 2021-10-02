@@ -20,6 +20,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var navController: NavHostController
 
+
     private val sharedViewModel by viewModels<SharedViewModel>()
 
 
