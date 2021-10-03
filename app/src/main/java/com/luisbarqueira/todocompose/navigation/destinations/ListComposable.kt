@@ -7,13 +7,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.luisbarqueira.todocompose.ui.screens.list.ListScreen
 import com.luisbarqueira.todocompose.ui.viewmodels.SharedViewModel
+import com.luisbarqueira.todocompose.util.Action
 import com.luisbarqueira.todocompose.util.Constants.LIST_ARGUMENT_KEY
 import com.luisbarqueira.todocompose.util.Constants.LIST_SCREEN
 
 @ExperimentalMaterialApi
 fun NavGraphBuilder.listComposable(
     navigateToTaskScreen: (taskId: Int) -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    action: Action
 ) {
     composable(
         route = LIST_SCREEN,
@@ -21,6 +23,6 @@ fun NavGraphBuilder.listComposable(
             type = NavType.StringType
         })
     ) {
-        ListScreen(navigateToTaskScreen = navigateToTaskScreen, sharedViewModel = sharedViewModel)
+        ListScreen(navigateToTaskScreen = navigateToTaskScreen, sharedViewModel = sharedViewModel, action =action)
     }
 }

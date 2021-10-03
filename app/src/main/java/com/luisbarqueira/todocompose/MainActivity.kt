@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
     private val sharedViewModel by viewModels<SharedViewModel>()
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -31,7 +32,9 @@ class MainActivity : ComponentActivity() {
                 navController = rememberNavController()
                 SetupNavigation(
                     navController = navController,
-                    sharedViewModel = sharedViewModel
+                    sharedViewModel = sharedViewModel,
+                    action = sharedViewModel.action.value,
+                    changeAction = sharedViewModel::changeAction
                 )
             }
         }

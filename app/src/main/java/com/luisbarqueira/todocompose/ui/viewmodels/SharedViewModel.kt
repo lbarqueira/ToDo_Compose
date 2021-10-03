@@ -3,14 +3,17 @@ package com.luisbarqueira.todocompose.ui.viewmodels
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luisbarqueira.todocompose.data.models.Priority
 import com.luisbarqueira.todocompose.data.models.TodoTask
 import com.luisbarqueira.todocompose.data.repositories.TodoRepository
+import com.luisbarqueira.todocompose.util.Action
 import com.luisbarqueira.todocompose.util.RequestState
 import com.luisbarqueira.todocompose.util.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,6 +23,12 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel @Inject constructor(private val repository: TodoRepository) :
     ViewModel() {
+
+    val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
+
+    fun changeAction (newAction:Action) {
+        action.value = newAction
+    }
 
     private val _allTasks =
         MutableStateFlow<RequestState<List<TodoTask>>>(RequestState.Idle)
@@ -124,6 +133,36 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
                 _selectedTask.value = it
             }
         }
+    }
+
+
+
+    private fun addTask() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val todoTask: TodoTask = TodoTask(
+                title = title.value,
+                description = description.value,
+                priority = priority.value
+            )
+            repository.addTask(todoTask = todoTask)
+        }
+    }
+
+    fun handleDatabaseActions(action: Action) {
+        when (action) {
+            Action.ADD -> addTask()
+            Action.UPDATE -> {
+            }
+            Action.DELETE -> {
+            }
+            Action.DELETE_ALL -> {
+            }
+            Action.UNDO -> {
+            }
+            else -> {
+            }
+        }
+        this.action.value = Action.NO_ACTION
     }
 
 }
