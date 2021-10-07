@@ -20,15 +20,9 @@ import com.luisbarqueira.todocompose.util.toAction
 fun SetupNavigation(
     navController: NavHostController,
     sharedViewModel: SharedViewModel,
-    action: Action,
-    changeAction: (Action) -> Unit
+    changeAction: (Action) -> Unit,
+    action: Action
 ) {
-/*    val screen = remember(navController) {
-        Screens(navController = navController)
-    }*/
-
-    var myAction by rememberSaveable { mutableStateOf(Action.NO_ACTION) }
-
     Log.d("SetupNavigation", "Recomposition of SetupNavigation")
 
     NavHost(
@@ -40,7 +34,6 @@ fun SetupNavigation(
         // routes are represented as strings.
         // A named argument is provided inside routes in curly braces like this {argument}.
 
-        // FIXME: LaunchedEffect not working on configuration changes
         composable(
             route = "list/{action}", // LIST_SCREEN
             arguments = listOf(
@@ -49,19 +42,16 @@ fun SetupNavigation(
                     type = NavType.StringType
                 })
         ) { entry -> // Look up "action" in NavBackStackEntry's arguments
-            myAction = entry.arguments?.getString("action").toAction()
 
-            Log.d("SetupNavigation", "myAction = ${myAction.name}")
-            Log.d("SetupNavigation", "action = ${action.name}")
+            val actionArg = entry.arguments?.getString("action").toAction()
 
+            var myAction by rememberSaveable { mutableStateOf(Action.NO_ACTION) }
 
-            // whenever actionName changes the block of code inside is triggered
+            // whenever myAction changes the block of code inside is triggered
             LaunchedEffect(key1 = myAction) {
-                // sharedViewModel.action.value = action
-                if (action != myAction) {
-                    changeAction(myAction)
-                    Log.d("SetupNavigation", "myAction_afterchange = ${action.name}")
-                    myAction = action
+                if (actionArg != myAction) {
+                    myAction = actionArg
+                    changeAction(myAction)  // sharedViewModel.action.value = myAction
                 }
             }
 
@@ -74,11 +64,6 @@ fun SetupNavigation(
             )
         }
 
-
-/*        listComposable (
-            navigateToTaskScreen = screen.task
-        )*/
-
         composable(
             route = "task/{taskId}", // TASK_SCREEN
             arguments = listOf(
@@ -87,10 +72,8 @@ fun SetupNavigation(
                     type = NavType.IntType
                 })
         ) { entry -> // Look up "taskId" in NavBackStackEntry's arguments
-            val taskId = entry.arguments!!.getInt("taskId")
 
-            //FIXME: To eliminate this Log.d
-            // Log.d("SetupNavigation", "taskId = $taskId")
+            val taskId = entry.arguments!!.getInt("taskId")
 
             sharedViewModel.getSelectedTask(taskId = taskId)
 
@@ -114,11 +97,5 @@ fun SetupNavigation(
                 }
             )
         }
-
-
-/*        taskComposable(
-            navigateToListScreen = screen.list
-        )*/
-
     }
 }
