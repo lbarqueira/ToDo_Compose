@@ -16,25 +16,25 @@ Following a tutorial by [stevdza-san](https://github.com/stevdza-san)
 
 - Dependency injection with Dagger-Hilt library.
 
-## See open Issues for contribution
+### See open Issues for contribution
 
-### The problem: as you may notice the ViewModel is huge!!!
+_The problem: as you may notice the ViewModel is huge!!!_
 
 How to turn the Architecture of this app Clean through the use of:
 
-1 - MVVM together with Clear Architecture concepts
-2 - UseCases, one UseCase per feature
-3 - One ViewModel per Screen
-4 - One Repository per screen
-5 - View states
+- MVVM together with Clear Architecture concepts
+- UseCases, one UseCase per feature
+- One ViewModel per Screen
+- One Repository per screen
+- View states
 
 Also maintaining:
 
-6 - Hilt for dependency injection (already in use)
-7 - Room for database
+- Hilt for dependency injection (already in use)
+- Room for database
 
 Add-ons:
 
-- multi-module
-- tests
+- Multi-module
+- Tests
 
