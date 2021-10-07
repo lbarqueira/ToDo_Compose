@@ -55,8 +55,9 @@ fun ListScreen(
 
     // sharedViewModel.handleDatabaseActions(action)
 
-    val scaffoldState:ScaffoldState = rememberScaffoldState()
-    
+    val scaffoldState: ScaffoldState = rememberScaffoldState()
+
+    // every time the ListScreen function triggers the following function is triggered
     DisplaySnackBar(
         scaffoldState = scaffoldState,
         handleDatabaseActions = { sharedViewModel.handleDatabaseActions(action) },
@@ -66,6 +67,7 @@ fun ListScreen(
 
 
     Scaffold(
+        // to be able to display the snackbar
         scaffoldState = scaffoldState,
         topBar = {
             ListAppBar(
@@ -115,7 +117,7 @@ fun DisplaySnackBar(
 
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = action){
+    LaunchedEffect(key1 = action) {
         if (action != Action.NO_ACTION) {
             scope.launch {
                 val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(

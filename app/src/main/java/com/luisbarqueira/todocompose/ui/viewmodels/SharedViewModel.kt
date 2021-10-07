@@ -3,7 +3,6 @@ package com.luisbarqueira.todocompose.ui.viewmodels
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luisbarqueira.todocompose.data.models.Priority
@@ -26,7 +25,7 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
 
     val action: MutableState<Action> = mutableStateOf(Action.NO_ACTION)
 
-    fun changeAction (newAction:Action) {
+    fun changeAction(newAction: Action) {
         action.value = newAction
     }
 
@@ -120,11 +119,10 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
             _allTasks.value = RequestState.Error(e)
 
         }
-
     }
 
 
-    private val _selectedTask: MutableStateFlow<TodoTask?> = MutableStateFlow<TodoTask?>(null)
+    private val _selectedTask: MutableStateFlow<TodoTask?> = MutableStateFlow(null)
     val selectTask: StateFlow<TodoTask?> = _selectedTask
 
     fun getSelectedTask(taskId: Int) {
@@ -135,11 +133,9 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
         }
     }
 
-
-
     private fun addTask() {
         viewModelScope.launch(Dispatchers.IO) {
-            val todoTask: TodoTask = TodoTask(
+            val todoTask = TodoTask(
                 title = title.value,
                 description = description.value,
                 priority = priority.value
