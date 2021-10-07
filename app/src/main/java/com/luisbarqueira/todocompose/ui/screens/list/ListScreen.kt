@@ -53,9 +53,6 @@ fun ListScreen(
     val searchTextState: String = sharedViewModel.searchTextState.value
 
 
-    // val action by sharedViewModel.action
-
-
     // sharedViewModel.handleDatabaseActions(action)
 
     val scaffoldState:ScaffoldState = rememberScaffoldState()
