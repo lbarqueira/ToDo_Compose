@@ -38,6 +38,30 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
         Log.d("SharedViewModel", "Init block")
     }
 
+
+    private val _searchedTasks =
+        MutableStateFlow<RequestState<List<TodoTask>>>(RequestState.Idle)
+    val searchedTasks: StateFlow<RequestState<List<TodoTask>>> = _searchedTasks
+
+    fun searchDatabase(searchQuery: String) {
+        _searchedTasks.value = RequestState.Loading
+        try {
+            viewModelScope.launch {
+                // Finds any values that have searchQuery in any position - sql LIKE
+                repository.searchDatabase(searchQuery = "%$searchQuery%")
+                    .collect { searchedTasks ->
+                        _searchedTasks.value = RequestState.Success(searchedTasks)
+                    }
+            }
+
+        } catch (e: Exception) {
+            _searchedTasks.value = RequestState.Error(e)
+
+        }
+        searchAppBarState.value = SearchAppBarState.TRIGGERED
+    }
+
+
     // state: searchAppBarState
     var searchAppBarState: MutableState<SearchAppBarState> =
         mutableStateOf(SearchAppBarState.CLOSED)
@@ -142,6 +166,7 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
             )
             repository.addTask(todoTask = todoTask)
         }
+        searchAppBarState.value = SearchAppBarState.CLOSED
     }
 
     private fun updateTask() {
@@ -168,14 +193,18 @@ class SharedViewModel @Inject constructor(private val repository: TodoRepository
         }
     }
 
+    private fun deleteAllTasks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllTasks()
+        }
+    }
 
     fun handleDatabaseActions(action: Action) {
         when (action) {
             Action.ADD -> addTask()
             Action.UPDATE -> updateTask()
             Action.DELETE -> deleteTask()
-            Action.DELETE_ALL -> {
-            }
+            Action.DELETE_ALL -> deleteAllTasks()
             Action.UNDO -> addTask()
             else -> {
             }

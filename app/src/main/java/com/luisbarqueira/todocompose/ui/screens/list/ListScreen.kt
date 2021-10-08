@@ -52,6 +52,8 @@ fun ListScreen(
     //! Alternatively you can do as following:
     val searchTextState: String = sharedViewModel.searchTextState.value
 
+    val searchedTasks by sharedViewModel.searchedTasks.collectAsState()
+
 
     // sharedViewModel.handleDatabaseActions(action)
 
@@ -74,7 +76,7 @@ fun ListScreen(
         scaffoldState = scaffoldState,
         topBar = {
             ListAppBar(
-                // sharedViewModel = sharedViewModel,
+                sharedViewModel = sharedViewModel,
                 searchAppBarState = searchAppBarState,
                 searchTextState = searchTextState,
                 onSearchClicked = sharedViewModel::onSearchClicked,
@@ -87,7 +89,9 @@ fun ListScreen(
     ) {
         ListContent(
             navigateToTaskScreen = navigateToTaskScreen,
-            tasks = allTasks
+            allTasks = allTasks,
+            searchAppBarState = searchAppBarState,
+            searchedTasks = searchedTasks
         )
     }
 }
@@ -125,7 +129,7 @@ fun DisplaySnackBar(
         if (action != Action.NO_ACTION) {
             scope.launch {
                 val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(
-                    message = "${action.name}: $taskTitle",
+                    message = setMessage(action = action, taskTitle = taskTitle),
                     actionLabel = setActionLabel(action = action)
                 )
                 undoDeletedTask(
@@ -136,6 +140,18 @@ fun DisplaySnackBar(
             }
         }
     }
+}
+
+private fun setMessage(
+    action: Action,
+    taskTitle: String
+): String {
+
+    return when (action) {
+        Action.DELETE_ALL -> "All tasks removed."
+        else -> "${action.name}: $taskTitle"
+    }
+
 }
 
 private fun setActionLabel(action: Action): String {

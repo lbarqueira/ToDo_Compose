@@ -19,20 +19,46 @@ import com.luisbarqueira.todocompose.data.models.Priority
 import com.luisbarqueira.todocompose.data.models.TodoTask
 import com.luisbarqueira.todocompose.ui.theme.*
 import com.luisbarqueira.todocompose.util.RequestState
+import com.luisbarqueira.todocompose.util.SearchAppBarState
 
 @ExperimentalMaterialApi
 @Composable
 fun ListContent(
     navigateToTaskScreen: (taskId: Int) -> Unit,
-    tasks: RequestState<List<TodoTask>>
+    allTasks: RequestState<List<TodoTask>>,
+    searchAppBarState: SearchAppBarState,
+    searchedTasks: RequestState<List<TodoTask>>
 ) {
-    if (tasks is RequestState.Success) {
-        if (tasks.data.isEmpty()) EmptyContent() else
-            DisplayTasks(
-                tasks = tasks.data,
+    if (searchAppBarState == SearchAppBarState.TRIGGERED) {
+        if (searchedTasks is RequestState.Success) {
+            HandleListContent(
+                tasks = searchedTasks.data,
                 navigateToTaskScreen = navigateToTaskScreen
             )
+        }
+    } else {
+        if (allTasks is RequestState.Success) {
+            HandleListContent(
+                tasks = allTasks.data,
+                navigateToTaskScreen = navigateToTaskScreen
+            )
+        }
     }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun HandleListContent(
+    tasks: List<TodoTask>,
+    navigateToTaskScreen: (taskId: Int) -> Unit
+
+) {
+    if (tasks.isEmpty()) EmptyContent() else
+        DisplayTasks(
+            tasks = tasks,
+            navigateToTaskScreen = navigateToTaskScreen
+        )
+
 }
 
 @ExperimentalMaterialApi
