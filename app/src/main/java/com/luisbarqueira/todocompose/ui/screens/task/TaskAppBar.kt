@@ -7,10 +7,15 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.luisbarqueira.todocompose.R
+import com.luisbarqueira.todocompose.components.DisplayAlertDialog
 import com.luisbarqueira.todocompose.data.models.Priority
 import com.luisbarqueira.todocompose.data.models.TodoTask
 import com.luisbarqueira.todocompose.ui.theme.topAppBarBackgroundColor
@@ -102,10 +107,35 @@ fun ExistingTaskAppBar(
         },
         backgroundColor = MaterialTheme.colors.topAppBarBackgroundColor,
         actions = {
-            DeleteAction(onDeleteClicked = navigateToListScreen)
-            UpdateAction(onUpdateClicked = navigateToListScreen)
+            ExistingTaskAppBarActions(
+                selectedTask = selectedTask,
+                navigateToListScreen = navigateToListScreen
+            )
         }
     )
+}
+
+
+@Composable
+fun ExistingTaskAppBarActions(
+    selectedTask: TodoTask,
+    navigateToListScreen: (Action) -> Unit,
+
+    ) {
+    var openDialog by remember { mutableStateOf(false) }
+
+    DisplayAlertDialog(
+        title = "Remove ${selectedTask.title}?",
+        message = "Are you sure you want to remove ${selectedTask.title}?",
+        openDialog = openDialog,
+        closeDialog = { openDialog = false },
+        onYesClicked = { navigateToListScreen(Action.DELETE) }
+    )
+
+    DeleteAction(onDeleteClicked = {
+        openDialog = true
+    })
+    UpdateAction(onUpdateClicked = navigateToListScreen)
 }
 
 @Composable
@@ -124,10 +154,10 @@ fun CloseAction(onCloseClicked: (Action) -> Unit) {
 }
 
 @Composable
-fun DeleteAction(onDeleteClicked: (Action) -> Unit) {
+fun DeleteAction(onDeleteClicked: () -> Unit) {
     IconButton(
         onClick = {
-            onDeleteClicked(Action.DELETE)
+            onDeleteClicked()
         }
     ) {
         Icon(
