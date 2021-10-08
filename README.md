@@ -22,7 +22,7 @@ _The problem: as you may notice the ViewModel is huge!!!_
 
 How to turn the Architecture of this app Clean through the use of:
 
-- MVVM together with Clear Architecture concepts
+- MVVM together with Clean Architecture concepts
 - UseCases, one UseCase per feature
 - One ViewModel per Screen
 - One Repository per screen
