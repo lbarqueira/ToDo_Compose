@@ -75,7 +75,9 @@ fun SetupNavigation(
 
             val taskId = entry.arguments!!.getInt("taskId")
 
-            sharedViewModel.getSelectedTask(taskId = taskId)
+            LaunchedEffect(key1 = taskId, block = {
+                sharedViewModel.getSelectedTask(taskId = taskId)
+            })
 
             val selectedTask by sharedViewModel.selectTask.collectAsState()
             // Log.d("SetupNavigation", "selectedTask = $selectedTask")

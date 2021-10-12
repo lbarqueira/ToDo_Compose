@@ -1,5 +1,6 @@
 package com.luisbarqueira.todocompose.ui.screens.list
 
+import android.util.Log
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,12 +27,13 @@ fun ListScreen(
     // Instead, see rememberCoroutineScope to obtain a CoroutineScope that may be used to launch
     // ongoing jobs scoped to the composition in response to event callbacks.
 
-/*    LaunchedEffect(true) {
-        Log.d("ListScreen", "LaunchedEffect triggered")
-        sharedViewModel.getAllTasks()
-    }*/
-    //! getAllTasks() in the init block of sharedViewModel
+    //! getAllTasks() is in the init block of sharedViewModel
 
+    //! Problem: readSortState() is triggered whenever there is a configuration change (rotation)
+    LaunchedEffect(true) {
+        Log.d("ListScreen", "LaunchedEffect triggered")
+        sharedViewModel.readSortState()
+    }
 
     //! collectAsState() collects values from the StateFlow and represents the latest value
     //! via Compose's State API. This will make the Compose code that reads that state value recompose on new emissions.
@@ -39,7 +41,10 @@ fun ListScreen(
     //! LiveData.observeAsState()
 
     val allTasks by sharedViewModel.allTasks.collectAsState() // the type is  RequestState<List<TodoTask>>
+    val sortState by sharedViewModel.sortState.collectAsState() // the type is RequestState<Priority>
 
+    val lowPriorityTasks by sharedViewModel.lowPriorityTasks.collectAsState() // the type is List<TodoTask>
+    val highPriorityTasks by sharedViewModel.highPriorityTasks.collectAsState() // the type is List<TodoTask>
 
     //! 1 - We are declaring a variable searchAppBarState of type SearchAppBarState
     //! 2 - sharedViewModel.searchAppBarState is of type MutableState<SearchAppBarState>
@@ -91,7 +96,10 @@ fun ListScreen(
             navigateToTaskScreen = navigateToTaskScreen,
             allTasks = allTasks,
             searchAppBarState = searchAppBarState,
-            searchedTasks = searchedTasks
+            searchedTasks = searchedTasks,
+            lowPriorityTasks = lowPriorityTasks,
+            highPriorityTasks = highPriorityTasks,
+            sortState = sortState
         )
     }
 }
