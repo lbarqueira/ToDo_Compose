@@ -37,7 +37,6 @@ import com.luisbarqueira.todocompose.components.DisplayAlertDialog
 import com.luisbarqueira.todocompose.ui.viewmodels.SharedViewModel
 import com.luisbarqueira.todocompose.util.Action
 import com.luisbarqueira.todocompose.util.SearchAppBarState
-import com.luisbarqueira.todocompose.util.TrailingIconState
 
 // When the user interacts with the UI, the UI raises events such as onClick.
 // Those events should notify the app logic, which can then change the app's state.
@@ -240,10 +239,6 @@ fun SearchAppBar(
     onSearchClicked: (String) -> Unit
 ) {
 
-    var trailingIconState by remember {
-        mutableStateOf(TrailingIconState.READY_TO_DELETE)
-    }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -286,19 +281,10 @@ fun SearchAppBar(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        when (trailingIconState) {
-                            TrailingIconState.READY_TO_DELETE -> {
-                                onTextChange("")
-                                trailingIconState = TrailingIconState.READY_TO_CLOSE
-                            }
-                            TrailingIconState.READY_TO_CLOSE -> {
-                                if (text.isNotEmpty()) {
-                                    onTextChange("")
-                                } else {
-                                    onCloseClicked()
-                                    trailingIconState = TrailingIconState.READY_TO_DELETE
-                                }
-                            }
+                        if (text.isNotEmpty()) {
+                            onTextChange("")
+                        } else {
+                            onCloseClicked()
                         }
                     },
                 ) {
