@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.luisbarqueira.todocompose.ui.screens.list.ListScreen
 import com.luisbarqueira.todocompose.ui.screens.task.TaskScreen
+import com.luisbarqueira.todocompose.ui.splash.SplashScreen
 import com.luisbarqueira.todocompose.ui.viewmodels.SharedViewModel
 import com.luisbarqueira.todocompose.util.Action
 import com.luisbarqueira.todocompose.util.toAction
@@ -27,12 +28,24 @@ fun SetupNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = "list/{action}" // LIST_SCREEN
+        startDestination = "splash" // SPLASH_SCREEN
     ) {
 
         // definition of navigation destinations
         // routes are represented as strings.
         // A named argument is provided inside routes in curly braces like this {argument}.
+
+        composable(
+            route = "splash", // SPLASH_SCREEN
+        ) {
+            SplashScreen(
+                navigateToListScreen = {
+                    navController.navigate(route = "list/${Action.NO_ACTION}") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                }
+            )
+        }
 
         composable(
             route = "list/{action}", // LIST_SCREEN
