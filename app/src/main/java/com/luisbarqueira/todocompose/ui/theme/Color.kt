@@ -20,6 +20,10 @@ val NonePriorityColor = MediumGray
 
 // extension properties
 
+val Colors.splashScreenBackgroundColor: Color
+    @Composable
+    get() = if (isLight) Purple700 else Color.Black
+
 val Colors.fabBackgroundColor: Color
     @Composable
     get() = if (isLight) Teal200 else Purple700
