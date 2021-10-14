@@ -128,7 +128,9 @@ fun DisplaySnackBar(
     action: Action,
     onUndoClicked: (Action) -> Unit
 ) {
-
+    //! May be improved. For now this function is triggered any time there is a
+    //! recomposition of DisplaySnackBar composable. Ideally, it should be triggered
+    //! when there is a change in action by means of a LaunchedEffect with key1 = action
     handleDatabaseActions()
 
     val scope = rememberCoroutineScope()
