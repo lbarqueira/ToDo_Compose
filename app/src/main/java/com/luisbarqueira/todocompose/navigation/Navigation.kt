@@ -1,14 +1,18 @@
 package com.luisbarqueira.todocompose.navigation
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.animation.composable
 import androidx.navigation.navArgument
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.luisbarqueira.todocompose.ui.screens.list.ListScreen
 import com.luisbarqueira.todocompose.ui.screens.task.TaskScreen
 import com.luisbarqueira.todocompose.ui.splash.SplashScreen
@@ -16,6 +20,7 @@ import com.luisbarqueira.todocompose.ui.viewmodels.SharedViewModel
 import com.luisbarqueira.todocompose.util.Action
 import com.luisbarqueira.todocompose.util.toAction
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @Composable
 fun SetupNavigation(
@@ -26,7 +31,7 @@ fun SetupNavigation(
 ) {
     Log.d("SetupNavigation", "Recomposition of SetupNavigation")
 
-    NavHost(
+    AnimatedNavHost(
         navController = navController,
         startDestination = "splash" // SPLASH_SCREEN
     ) {
@@ -37,6 +42,13 @@ fun SetupNavigation(
 
         composable(
             route = "splash", // SPLASH_SCREEN
+            exitTransition = { _, target ->
+                when (target.destination.route) {
+                    "list/{action}" ->
+                        slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(300))
+                    else -> null
+                }
+            },
         ) {
             SplashScreen(
                 navigateToListScreen = {
@@ -83,7 +95,11 @@ fun SetupNavigation(
                 navArgument("taskId") {
                     // Make argument type safe
                     type = NavType.IntType
-                })
+                }),
+            enterTransition = { _, _ ->
+                slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300))
+            }
+
         ) { entry -> // Look up "taskId" in NavBackStackEntry's arguments
 
             val taskId = entry.arguments!!.getInt("taskId")
