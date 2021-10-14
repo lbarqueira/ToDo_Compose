@@ -82,4 +82,7 @@ dependencies {
     // Navigation dependency
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
 
+    // Accompanist Jetpack Navigation Compose Animation
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.19.0"
+
 }
