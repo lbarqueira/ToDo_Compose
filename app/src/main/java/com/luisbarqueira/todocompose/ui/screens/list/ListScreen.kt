@@ -30,10 +30,11 @@ fun ListScreen(
     //! getAllTasks() is in the init block of sharedViewModel
 
     //! Problem: readSortState() is triggered whenever there is a configuration change (rotation)
-    LaunchedEffect(true) {
+    // Fixed with issue #12 - is in the init block of sharedViewModel
+/*    LaunchedEffect(true) {
         Log.d("ListScreen", "LaunchedEffect triggered")
         sharedViewModel.readSortState()
-    }
+    }*/
 
     //! collectAsState() collects values from the StateFlow and represents the latest value
     //! via Compose's State API. This will make the Compose code that reads that state value recompose on new emissions.
