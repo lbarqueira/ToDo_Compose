@@ -1,16 +1,17 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
+        // https://developer.android.com/jetpack/androidx/releases/compose-kotlin
         kotlin_version = '1.5.31'
-        compose_version = '1.0.4'
-        hilt_version = '2.38.1'
+        compose_version = '1.0.5'
+        hilt_version = '2.40.5'
     }
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
 
@@ -21,4 +22,8 @@ buildscript {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+task javaHome {
+    println "JAVA_HOME:" + System.getProperty("java.home")
 }
