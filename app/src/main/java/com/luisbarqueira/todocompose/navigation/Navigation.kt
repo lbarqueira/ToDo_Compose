@@ -1,5 +1,4 @@
 package com.luisbarqueira.todocompose.navigation
-
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -42,8 +41,8 @@ fun SetupNavigation(
 
         composable(
             route = "splash", // SPLASH_SCREEN
-            exitTransition = { _, target ->
-                when (target.destination.route) {
+            exitTransition = {
+                when (targetState.destination.route) {
                     "list/{action}" ->
                         slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(300))
                     else -> null
@@ -96,7 +95,7 @@ fun SetupNavigation(
                     // Make argument type safe
                     type = NavType.IntType
                 }),
-            enterTransition = { _, _ ->
+            enterTransition = {
                 slideInHorizontally(initialOffsetX = { -1000 }, animationSpec = tween(300))
             }
 

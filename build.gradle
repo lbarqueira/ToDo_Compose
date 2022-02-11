@@ -2,8 +2,10 @@
 buildscript {
     ext {
         // https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-        kotlin_version = '1.5.31'
-        compose_version = '1.0.5'
+        // https://developer.android.com/jetpack/androidx/releases/compose-compiler
+        kotlin_version = '1.6.10'
+        compose_version = '1.1.0'
+        compose_compiler_version = '1.1.0'
         hilt_version = '2.40.5'
     }
     repositories {
@@ -22,8 +24,4 @@ buildscript {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-task javaHome {
-    println "JAVA_HOME:" + System.getProperty("java.home")
 }
